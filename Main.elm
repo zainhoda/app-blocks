@@ -1,10 +1,13 @@
-module Main exposing (..)
+port module Main exposing (..)
 
 import Focus
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (..)
 import Json.Encode
+
+
+port newJason : String -> Cmd msg
 
 
 type alias Model =
@@ -74,12 +77,10 @@ initialModel =
         }
     , body =
         { header =
-            { title = "Page Title" }
+            { title = "App Title" }
         , sections =
             [ Section Vertical
-                [ Component <| LabelType { text = "Label 1" }
-                , Component <| LabelType { text = "Label 2" }
-                ]
+                []
             ]
         }
     }
@@ -87,7 +88,16 @@ initialModel =
 
 init : ( Model, Cmd Msg )
 init =
-    ( initialModel, Cmd.none )
+    initialModel |> renderHtml
+
+
+renderHtml : Model -> ( Model, Cmd Msg )
+renderHtml model =
+    ( model
+    , encodeJson model
+        |> Json.Encode.encode 0
+        |> newJason
+    )
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -107,14 +117,13 @@ update msg model =
                 header =
                     model.body.header
             in
-            ( { model
+            { model
                 | body =
                     { body
                         | header = headFn header
                     }
-              }
-            , Cmd.none
-            )
+            }
+                |> renderHtml
 
         AddBodySection ->
             let
@@ -124,14 +133,13 @@ update msg model =
                 sections =
                     model.body.sections
             in
-            ( { model
+            { model
                 | body =
                     { body
                         | sections = sections ++ [ Section Vertical [ Component <| LabelType { text = "New Label" } ] ]
                     }
-              }
-            , Cmd.none
-            )
+            }
+                |> renderHtml
 
         SetSectionType id sectionType ->
             let
@@ -141,7 +149,7 @@ update msg model =
                 sections =
                     model.body.sections
             in
-            ( { model
+            { model
                 | body =
                     { body
                         | sections =
@@ -155,9 +163,8 @@ update msg model =
                                 )
                                 sections
                     }
-              }
-            , Cmd.none
-            )
+            }
+                |> renderHtml
 
         AddComponent id ->
             let
@@ -167,7 +174,7 @@ update msg model =
                 sections =
                     model.body.sections
             in
-            ( { model
+            { model
                 | body =
                     { body
                         | sections =
@@ -181,9 +188,8 @@ update msg model =
                                 )
                                 sections
                     }
-              }
-            , Cmd.none
-            )
+            }
+                |> renderHtml
 
         UpdateComponent sectionId itemId componentFn ->
             let
@@ -193,7 +199,7 @@ update msg model =
                 sections =
                     model.body.sections
             in
-            ( { model
+            { model
                 | body =
                     { body
                         | sections =
@@ -224,9 +230,8 @@ update msg model =
                                 )
                                 sections
                     }
-              }
-            , Cmd.none
-            )
+            }
+                |> renderHtml
 
 
 stylesheet =
@@ -261,6 +266,7 @@ view model =
                 [ ( "width", "50%" )
                 , ( "padding", "10px" )
                 , ( "overflow-y", "scroll" )
+                , ( "border-right", "1px dotted" )
                 , ( "height", "calc(100vh - 20px)" )
                 ]
             ]
@@ -271,7 +277,7 @@ view model =
             [ style
                 [ ( "width", "50%" )
                 , ( "height", "100vh" )
-                , ( "border-left", "1px dotted" )
+                , ( "border-right", "1px dotted" )
                 , ( "padding", "10px" )
                 , ( "overflow-y", "scroll" )
                 , ( "height", "calc(100vh - 20px)" )

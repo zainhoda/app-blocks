@@ -1,0 +1,187 @@
+.jason .sections {
+  flex: 1;
+  z-index: 1;
+  overflow: auto;
+}
+.jason {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: auto;
+  padding: 0;
+  position: relative;
+}
+.jason .hidden {
+  z-index: -1;
+}
+.jason .float-right {
+  float: right!important;
+}
+.jason .nav-justified .nav-item {
+  -ms-flex-preferred-size: 0;
+  flex-basis: 0;
+  -webkit-box-flex: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+  text-align: center;
+}
+.jason .nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  padding-left: 0;
+  margin-bottom: 0;
+  list-style: none;
+}
+.jason.hidden {
+  display: none;
+}
+.jason textarea, .jason input {
+  width: 100%;
+  padding: 5px;
+}
+.jason nav.header {
+  border: none !important;
+  font-size: 12px !important;
+  z-index: 1000;
+}
+.jason nav.header img{
+  height: 25px;
+}
+.jason .webcontainer {
+  border: none;
+  height: 100%;
+  width: 100%;
+  overflow: auto;
+  position: absolute;
+  top: 0;
+  left:0;
+  right:0;
+  bottom:0;
+}
+.jason .horizontal.section img {
+  max-width: inherit !important;
+}
+.jason nav.nav h5 {
+  margin: 0;
+}
+.jason nav.nav {
+  padding: 10px;
+  background: white;
+}
+.jason nav.nav:empty {
+  padding: 0;
+}
+.jason .align-right {
+  text-align: right !important;
+}
+.jason .footer {
+  align-items: center;
+  padding: 5px;
+  z-index: 1000;
+}
+.jason .footer img {
+  height: 25px;
+}
+.jason .footer .input-item.textfield{
+  flex-grow: 1;
+  margin: 0 5px;
+}
+.jason .footer .input-item.button-item {
+  width: 40px;
+  font-size: 15px;
+  text-align: center;
+}
+
+.jason * {
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.jason .body {
+  margin: 0;
+  padding: 0px;
+}
+.jason .body > *{
+  max-width: 400px;
+  margin: 0 auto;
+}
+.jason p {
+  margin: 0 !important;
+}
+.jason .section-item > .layout{
+  padding: 10px;
+}
+.jason .section-header > .layout{
+  padding: 10px;
+}
+.jason .layout{
+  display:flex;
+  align-items: flex-start;
+}
+.jason .layout.horizontal{
+}
+.jason .layout.horizontal > *{
+  max-height: 100%;
+}
+.jason .layout.horizontal.spacing-20 > :not(:last-child) {
+  margin-right: 20px;
+}
+.jason .layout.vertical{
+  flex-direction: column;
+}
+.jason .layout.vertical > *{
+  max-width: 100%;
+  width: 100%;
+}
+.jason .layout.vertical.spacing-20 > :not(:last-child) {
+  margin-bottom: 20px;
+}
+.jason img{
+  width: auto;
+  height: auto;
+}
+.jason a.button{
+  padding: 10px;
+  display:inline-block;
+}
+.jason div.flexible.space{
+  flex: 1;
+}
+.jason .horizontal.section > .section-items {
+  display:flex;
+  align-items: flex-start;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  -ms-overflow-style: -ms-autohiding-scrollbar;
+}
+.jason .horizontal.section > .section-items > .item{
+  max-height: 100%;
+  flex: 0 0 auto;
+}
+.jason p{
+  margin:0;
+  font-family: helvetica;
+  font-size: 12px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-all;
+}
+.jason textarea {
+  outline: none;
+}
+.jason a {
+  text-decoration: none !important;
+  color: black;
+  display: block;
+}
+.jason img {
+  max-width: 100%;
+}
+.jason [data-flex=true] {
+  flex: 1;
+}
+
