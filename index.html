@@ -50,7 +50,9 @@ body {
         // When elm signals that the Jason code has changed, trigger an
         // update
         app.ports.newJason.subscribe(function(newJason) {
-                document.querySelector("#jason")._update(JSON.parse(newJason));
+                if (document.querySelector("#jason")) {
+                        document.querySelector("#jason")._update(JSON.parse(newJason));
+                }
         });
 
         </script>
