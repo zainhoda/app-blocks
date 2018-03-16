@@ -8308,6 +8308,87 @@ _evancz$focus$Focus_ops['=>'] = F2(
 			{get: get, update: update});
 	});
 
+var _zainhoda$app_blocks$Main$encodeTitle = function (title) {
+	var _p0 = title;
+	switch (_p0.ctor) {
+		case 'SimpleTitle':
+			return _elm_lang$core$Json_Encode$string(_p0._0);
+		case 'LabelTitle':
+			return _elm_lang$core$Json_Encode$object(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'type',
+						_1: _elm_lang$core$Json_Encode$string('label')
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'text',
+							_1: _elm_lang$core$Json_Encode$string(_p0._0.text)
+						},
+						_1: {ctor: '[]'}
+					}
+				});
+		default:
+			return _elm_lang$core$Json_Encode$object(
+				{
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'type',
+						_1: _elm_lang$core$Json_Encode$string('image')
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'url',
+							_1: _elm_lang$core$Json_Encode$string(_p0._0.url)
+						},
+						_1: {ctor: '[]'}
+					}
+				});
+	}
+};
+var _zainhoda$app_blocks$Main$encodeStyle = function (style) {
+	return _elm_lang$core$Json_Encode$object(
+		{
+			ctor: '::',
+			_0: {
+				ctor: '_Tuple2',
+				_0: 'font',
+				_1: _elm_lang$core$Json_Encode$string(style.font)
+			},
+			_1: {
+				ctor: '::',
+				_0: {
+					ctor: '_Tuple2',
+					_0: 'size',
+					_1: _elm_lang$core$Json_Encode$string(style.size)
+				},
+				_1: {
+					ctor: '::',
+					_0: {
+						ctor: '_Tuple2',
+						_0: 'background',
+						_1: _elm_lang$core$Json_Encode$string(style.background)
+					},
+					_1: {
+						ctor: '::',
+						_0: {
+							ctor: '_Tuple2',
+							_0: 'color',
+							_1: _elm_lang$core$Json_Encode$string(style.color)
+						},
+						_1: {ctor: '[]'}
+					}
+				}
+			}
+		});
+};
 var _zainhoda$app_blocks$Main$encodeJson = function (model) {
 	return _elm_lang$core$Json_Encode$object(
 		{
@@ -8344,15 +8425,33 @@ var _zainhoda$app_blocks$Main$encodeJson = function (model) {
 											ctor: '_Tuple2',
 											_0: 'header',
 											_1: _elm_lang$core$Json_Encode$object(
-												{
-													ctor: '::',
-													_0: {
-														ctor: '_Tuple2',
-														_0: 'title',
-														_1: _elm_lang$core$Json_Encode$string(model.body.header.title)
+												A2(
+													_elm_lang$core$Basics_ops['++'],
+													{
+														ctor: '::',
+														_0: {
+															ctor: '_Tuple2',
+															_0: 'title',
+															_1: _zainhoda$app_blocks$Main$encodeTitle(model.body.header.title)
+														},
+														_1: {ctor: '[]'}
 													},
-													_1: {ctor: '[]'}
-												})
+													function () {
+														var _p1 = model.body.header.style;
+														if (_p1.ctor === 'Nothing') {
+															return {ctor: '[]'};
+														} else {
+															return {
+																ctor: '::',
+																_0: {
+																	ctor: '_Tuple2',
+																	_0: 'style',
+																	_1: _zainhoda$app_blocks$Main$encodeStyle(_p1._0)
+																},
+																_1: {ctor: '[]'}
+															};
+														}
+													}()))
 										},
 										_1: {
 											ctor: '::',
@@ -8371,8 +8470,8 @@ var _zainhoda$app_blocks$Main$encodeJson = function (model) {
 																		_0: 'type',
 																		_1: _elm_lang$core$Json_Encode$string(
 																			function () {
-																				var _p0 = section.type_;
-																				if (_p0.ctor === 'Horizontal') {
+																				var _p2 = section.type_;
+																				if (_p2.ctor === 'Horizontal') {
 																					return 'horizontal';
 																				} else {
 																					return 'vertical';
@@ -8390,8 +8489,8 @@ var _zainhoda$app_blocks$Main$encodeJson = function (model) {
 																					function (item) {
 																						return _elm_lang$core$Json_Encode$object(
 																							function () {
-																								var _p1 = item;
-																								var _p2 = _p1._0;
+																								var _p3 = item;
+																								var _p4 = _p3._0;
 																								return {
 																									ctor: '::',
 																									_0: {
@@ -8404,7 +8503,7 @@ var _zainhoda$app_blocks$Main$encodeJson = function (model) {
 																										_0: {
 																											ctor: '_Tuple2',
 																											_0: 'text',
-																											_1: _elm_lang$core$Json_Encode$string(_p2._0.text)
+																											_1: _elm_lang$core$Json_Encode$string(_p4._0.text)
 																										},
 																										_1: {ctor: '[]'}
 																									}
@@ -8527,7 +8626,12 @@ var _zainhoda$app_blocks$Main$dropdownInput = F4(
 											ctor: '::',
 											_0: _elm_lang$html$Html_Events$onClick(
 												optionFn(x)),
-											_1: {ctor: '[]'}
+											_1: {
+												ctor: '::',
+												_0: _elm_lang$html$Html_Attributes$checked(
+													_elm_lang$core$Native_Utils.eq(selectedValue, x)),
+												_1: {ctor: '[]'}
+											}
 										}
 									}
 								},
@@ -8541,6 +8645,43 @@ var _zainhoda$app_blocks$Main$dropdownInput = F4(
 						});
 				},
 				options));
+	});
+var _zainhoda$app_blocks$Main$colorInput = F3(
+	function (name, selectedColor, colorMsg) {
+		return A2(
+			_elm_lang$html$Html$span,
+			{ctor: '[]'},
+			{
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$label,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text(name),
+						_1: {ctor: '[]'}
+					}),
+				_1: {
+					ctor: '::',
+					_0: A2(
+						_elm_lang$html$Html$input,
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$type_('color'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$value(selectedColor),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Events$onInput(colorMsg),
+									_1: {ctor: '[]'}
+								}
+							}
+						},
+						{ctor: '[]'}),
+					_1: {ctor: '[]'}
+				}
+			});
 	});
 var _zainhoda$app_blocks$Main$btn = F2(
 	function (str, msg) {
@@ -8635,25 +8776,15 @@ var _zainhoda$app_blocks$Main$Section = F2(
 	function (a, b) {
 		return {type_: a, items: b};
 	});
-var _zainhoda$app_blocks$Main$Header = function (a) {
-	return {title: a};
-};
+var _zainhoda$app_blocks$Main$Header = F2(
+	function (a, b) {
+		return {title: a, style: b};
+	});
+var _zainhoda$app_blocks$Main$Style = F4(
+	function (a, b, c, d) {
+		return {font: a, size: b, background: c, color: d};
+	});
 var _zainhoda$app_blocks$Main$Vertical = {ctor: 'Vertical'};
-var _zainhoda$app_blocks$Main$initialModel = {
-	head: {title: 'Your Title'},
-	body: {
-		header: {title: 'App Title'},
-		sections: {
-			ctor: '::',
-			_0: A2(
-				_zainhoda$app_blocks$Main$Section,
-				_zainhoda$app_blocks$Main$Vertical,
-				{ctor: '[]'}),
-			_1: {ctor: '[]'}
-		}
-	}
-};
-var _zainhoda$app_blocks$Main$init = _zainhoda$app_blocks$Main$renderHtml(_zainhoda$app_blocks$Main$initialModel);
 var _zainhoda$app_blocks$Main$Horizontal = {ctor: 'Horizontal'};
 var _zainhoda$app_blocks$Main$Component = function (a) {
 	return {ctor: 'Component', _0: a};
@@ -8663,8 +8794,8 @@ var _zainhoda$app_blocks$Main$LabelType = function (a) {
 };
 var _zainhoda$app_blocks$Main$update = F2(
 	function (msg, model) {
-		var _p3 = msg;
-		switch (_p3.ctor) {
+		var _p5 = msg;
+		switch (_p5.ctor) {
 			case 'NoOp':
 				return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
 			case 'UpdateHead':
@@ -8673,7 +8804,7 @@ var _zainhoda$app_blocks$Main$update = F2(
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{
-							head: _p3._0(model.head)
+							head: _p5._0(model.head)
 						}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
@@ -8687,7 +8818,7 @@ var _zainhoda$app_blocks$Main$update = F2(
 							body: _elm_lang$core$Native_Utils.update(
 								body,
 								{
-									header: _p3._0(header)
+									header: _p5._0(header)
 								})
 						}));
 			case 'AddBodySection':
@@ -8733,9 +8864,9 @@ var _zainhoda$app_blocks$Main$update = F2(
 										_elm_lang$core$List$indexedMap,
 										F2(
 											function (i, v) {
-												return _elm_lang$core$Native_Utils.eq(i, _p3._0) ? _elm_lang$core$Native_Utils.update(
+												return _elm_lang$core$Native_Utils.eq(i, _p5._0) ? _elm_lang$core$Native_Utils.update(
 													v,
-													{type_: _p3._1}) : v;
+													{type_: _p5._1}) : v;
 											}),
 										sections)
 								})
@@ -8754,7 +8885,7 @@ var _zainhoda$app_blocks$Main$update = F2(
 										_elm_lang$core$List$indexedMap,
 										F2(
 											function (i, v) {
-												return _elm_lang$core$Native_Utils.eq(i, _p3._0) ? _elm_lang$core$Native_Utils.update(
+												return _elm_lang$core$Native_Utils.eq(i, _p5._0) ? _elm_lang$core$Native_Utils.update(
 													v,
 													{
 														items: A2(
@@ -8786,7 +8917,7 @@ var _zainhoda$app_blocks$Main$update = F2(
 										_elm_lang$core$List$indexedMap,
 										F2(
 											function (i, v) {
-												if (_elm_lang$core$Native_Utils.eq(i, _p3._0)) {
+												if (_elm_lang$core$Native_Utils.eq(i, _p5._0)) {
 													var items = v.items;
 													return _elm_lang$core$Native_Utils.update(
 														v,
@@ -8795,10 +8926,10 @@ var _zainhoda$app_blocks$Main$update = F2(
 																_elm_lang$core$List$indexedMap,
 																F2(
 																	function (j, item) {
-																		if (_elm_lang$core$Native_Utils.eq(j, _p3._1)) {
-																			var _p4 = item;
+																		if (_elm_lang$core$Native_Utils.eq(j, _p5._1)) {
+																			var _p6 = item;
 																			return _zainhoda$app_blocks$Main$Component(
-																				_p3._2(_p4._0));
+																				_p5._2(_p6._0));
 																		} else {
 																			return item;
 																		}
@@ -8814,6 +8945,33 @@ var _zainhoda$app_blocks$Main$update = F2(
 						}));
 		}
 	});
+var _zainhoda$app_blocks$Main$ImageTitle = function (a) {
+	return {ctor: 'ImageTitle', _0: a};
+};
+var _zainhoda$app_blocks$Main$LabelTitle = function (a) {
+	return {ctor: 'LabelTitle', _0: a};
+};
+var _zainhoda$app_blocks$Main$SimpleTitle = function (a) {
+	return {ctor: 'SimpleTitle', _0: a};
+};
+var _zainhoda$app_blocks$Main$initialModel = {
+	head: {title: 'Your Title'},
+	body: {
+		header: {
+			title: _zainhoda$app_blocks$Main$SimpleTitle('Your Title'),
+			style: _elm_lang$core$Maybe$Nothing
+		},
+		sections: {
+			ctor: '::',
+			_0: A2(
+				_zainhoda$app_blocks$Main$Section,
+				_zainhoda$app_blocks$Main$Vertical,
+				{ctor: '[]'}),
+			_1: {ctor: '[]'}
+		}
+	}
+};
+var _zainhoda$app_blocks$Main$init = _zainhoda$app_blocks$Main$renderHtml(_zainhoda$app_blocks$Main$initialModel);
 var _zainhoda$app_blocks$Main$AddComponent = function (a) {
 	return {ctor: 'AddComponent', _0: a};
 };
@@ -8828,6 +8986,60 @@ var _zainhoda$app_blocks$Main$SetSectionType = F2(
 var _zainhoda$app_blocks$Main$AddBodySection = {ctor: 'AddBodySection'};
 var _zainhoda$app_blocks$Main$UpdateBodyHeader = function (a) {
 	return {ctor: 'UpdateBodyHeader', _0: a};
+};
+var _zainhoda$app_blocks$Main$styleEditor = function (style) {
+	return A2(
+		_elm_lang$html$Html$span,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: A3(
+				_zainhoda$app_blocks$Main$colorInput,
+				'Background',
+				style.background,
+				function (str) {
+					return _zainhoda$app_blocks$Main$UpdateBodyHeader(
+						function (header) {
+							return _elm_lang$core$Native_Utils.update(
+								header,
+								{
+									style: A2(
+										_elm_lang$core$Maybe$map,
+										function (headerStyle) {
+											return _elm_lang$core$Native_Utils.update(
+												headerStyle,
+												{background: str});
+										},
+										header.style)
+								});
+						});
+				}),
+			_1: {
+				ctor: '::',
+				_0: A3(
+					_zainhoda$app_blocks$Main$colorInput,
+					'Foreground',
+					style.color,
+					function (str) {
+						return _zainhoda$app_blocks$Main$UpdateBodyHeader(
+							function (header) {
+								return _elm_lang$core$Native_Utils.update(
+									header,
+									{
+										style: A2(
+											_elm_lang$core$Maybe$map,
+											function (headerStyle) {
+												return _elm_lang$core$Native_Utils.update(
+													headerStyle,
+													{color: str});
+											},
+											header.style)
+									});
+							});
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
 };
 var _zainhoda$app_blocks$Main$UpdateHead = function (a) {
 	return {ctor: 'UpdateHead', _0: a};
@@ -8880,35 +9092,205 @@ var _zainhoda$app_blocks$Main$editor = function (model) {
 								}),
 							_1: {
 								ctor: '::',
-								_0: A3(
-									_zainhoda$app_blocks$Main$stringInput,
-									'Title',
-									model.body.header.title,
-									function (str) {
-										return _zainhoda$app_blocks$Main$UpdateBodyHeader(
-											function (header) {
-												return _elm_lang$core$Native_Utils.update(
-													header,
-													{title: str});
-											});
+								_0: A2(
+									_elm_lang$html$Html$h3,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text('Header'),
+										_1: {ctor: '[]'}
 									}),
 								_1: {
 									ctor: '::',
-									_0: A2(
-										_elm_lang$html$Html$hr,
-										{ctor: '[]'},
-										{ctor: '[]'}),
+									_0: A4(
+										_zainhoda$app_blocks$Main$dropdownInput,
+										'header-style',
+										function () {
+											var _p7 = model.body.header.style;
+											if (_p7.ctor === 'Nothing') {
+												return 'Unstyled Header';
+											} else {
+												return 'Styled Header';
+											}
+										}(),
+										{
+											ctor: '::',
+											_0: 'Unstyled Header',
+											_1: {
+												ctor: '::',
+												_0: 'Styled Header',
+												_1: {ctor: '[]'}
+											}
+										},
+										function (str) {
+											var _p8 = str;
+											if (_p8 === 'Styled Header') {
+												return _zainhoda$app_blocks$Main$UpdateBodyHeader(
+													function (header) {
+														return _elm_lang$core$Native_Utils.update(
+															header,
+															{
+																style: _elm_lang$core$Maybe$Just(
+																	{font: 'Avenir-Black', size: '20', background: '#27aae1', color: '#ffffff'})
+															});
+													});
+											} else {
+												return _zainhoda$app_blocks$Main$UpdateBodyHeader(
+													function (header) {
+														return _elm_lang$core$Native_Utils.update(
+															header,
+															{style: _elm_lang$core$Maybe$Nothing});
+													});
+											}
+										}),
 									_1: {
 										ctor: '::',
-										_0: A2(
-											_elm_lang$html$Html$h3,
-											{ctor: '[]'},
-											{
+										_0: function () {
+											var _p9 = model.body.header.style;
+											if (_p9.ctor === 'Nothing') {
+												return _elm_lang$html$Html$text('');
+											} else {
+												return _zainhoda$app_blocks$Main$styleEditor(_p9._0);
+											}
+										}(),
+										_1: {
+											ctor: '::',
+											_0: A4(
+												_zainhoda$app_blocks$Main$dropdownInput,
+												'title-type',
+												function () {
+													var _p10 = model.body.header.title;
+													switch (_p10.ctor) {
+														case 'SimpleTitle':
+															return 'Simple Title';
+														case 'LabelTitle':
+															return 'Label Title';
+														default:
+															return 'Image Title';
+													}
+												}(),
+												{
+													ctor: '::',
+													_0: 'Simple Title',
+													_1: {
+														ctor: '::',
+														_0: 'Label Title',
+														_1: {
+															ctor: '::',
+															_0: 'Image Title',
+															_1: {ctor: '[]'}
+														}
+													}
+												},
+												function (str) {
+													var _p11 = str;
+													switch (_p11) {
+														case 'Image Title':
+															return _zainhoda$app_blocks$Main$UpdateBodyHeader(
+																function (header) {
+																	return _elm_lang$core$Native_Utils.update(
+																		header,
+																		{
+																			title: _zainhoda$app_blocks$Main$ImageTitle(
+																				{url: 'http://via.placeholder.com/350x150'})
+																		});
+																});
+														case 'Label Title':
+															return _zainhoda$app_blocks$Main$UpdateBodyHeader(
+																function (header) {
+																	return _elm_lang$core$Native_Utils.update(
+																		header,
+																		{
+																			title: _zainhoda$app_blocks$Main$LabelTitle(
+																				{text: ''})
+																		});
+																});
+														default:
+															return _zainhoda$app_blocks$Main$UpdateBodyHeader(
+																function (header) {
+																	return _elm_lang$core$Native_Utils.update(
+																		header,
+																		{
+																			title: _zainhoda$app_blocks$Main$SimpleTitle('')
+																		});
+																});
+													}
+												}),
+											_1: {
 												ctor: '::',
-												_0: _elm_lang$html$Html$text('Sections'),
-												_1: {ctor: '[]'}
-											}),
-										_1: {ctor: '[]'}
+												_0: function () {
+													var _p12 = model.body.header.title;
+													switch (_p12.ctor) {
+														case 'SimpleTitle':
+															return A3(
+																_zainhoda$app_blocks$Main$stringInput,
+																'Simple Title',
+																_p12._0,
+																function (str) {
+																	return _zainhoda$app_blocks$Main$UpdateBodyHeader(
+																		function (header) {
+																			return _elm_lang$core$Native_Utils.update(
+																				header,
+																				{
+																					title: _zainhoda$app_blocks$Main$SimpleTitle(str)
+																				});
+																		});
+																});
+														case 'LabelTitle':
+															return A3(
+																_zainhoda$app_blocks$Main$stringInput,
+																'Label Title',
+																_p12._0.text,
+																function (str) {
+																	return _zainhoda$app_blocks$Main$UpdateBodyHeader(
+																		function (header) {
+																			return _elm_lang$core$Native_Utils.update(
+																				header,
+																				{
+																					title: _zainhoda$app_blocks$Main$LabelTitle(
+																						{text: str})
+																				});
+																		});
+																});
+														default:
+															return A3(
+																_zainhoda$app_blocks$Main$stringInput,
+																'Image Title',
+																_p12._0.url,
+																function (str) {
+																	return _zainhoda$app_blocks$Main$UpdateBodyHeader(
+																		function (header) {
+																			return _elm_lang$core$Native_Utils.update(
+																				header,
+																				{
+																					title: _zainhoda$app_blocks$Main$ImageTitle(
+																						{url: str})
+																				});
+																		});
+																});
+													}
+												}(),
+												_1: {
+													ctor: '::',
+													_0: A2(
+														_elm_lang$html$Html$hr,
+														{ctor: '[]'},
+														{ctor: '[]'}),
+													_1: {
+														ctor: '::',
+														_0: A2(
+															_elm_lang$html$Html$h3,
+															{ctor: '[]'},
+															{
+																ctor: '::',
+																_0: _elm_lang$html$Html$text('Sections'),
+																_1: {ctor: '[]'}
+															}),
+														_1: {ctor: '[]'}
+													}
+												}
+											}
+										}
 									}
 								}
 							}
@@ -8953,18 +9335,18 @@ var _zainhoda$app_blocks$Main$editor = function (model) {
 												_elm_lang$core$List$indexedMap,
 												F2(
 													function (itemNum, item) {
-														var _p5 = item;
-														var _p6 = _p5._0;
+														var _p13 = item;
+														var _p14 = _p13._0;
 														return A3(
 															_zainhoda$app_blocks$Main$stringInput,
 															'Label Text',
-															_p6._0.text,
+															_p14._0.text,
 															function (str) {
 																return A3(
 																	_zainhoda$app_blocks$Main$UpdateComponent,
 																	sectionNum,
 																	itemNum,
-																	function (_p7) {
+																	function (_p15) {
 																		return _zainhoda$app_blocks$Main$LabelType(
 																			{text: str});
 																	});
@@ -9145,7 +9527,7 @@ var _zainhoda$app_blocks$Main$main = _elm_lang$html$Html$program(
 	{
 		init: _zainhoda$app_blocks$Main$init,
 		update: _zainhoda$app_blocks$Main$update,
-		subscriptions: function (_p8) {
+		subscriptions: function (_p16) {
 			return _elm_lang$core$Platform_Sub$none;
 		},
 		view: _zainhoda$app_blocks$Main$view

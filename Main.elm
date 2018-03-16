@@ -47,8 +47,24 @@ type ComponentDetail
         }
 
 
+type Title
+    = SimpleTitle String
+    | LabelTitle { text : String }
+    | ImageTitle { url : String }
+
+
 type alias Header =
-    { title : String }
+    { title : Title
+    , style : Maybe Style
+    }
+
+
+type alias Style =
+    { font : String
+    , size : String
+    , background : String
+    , color : String
+    }
 
 
 type Msg
@@ -77,7 +93,10 @@ initialModel =
         }
     , body =
         { header =
-            { title = "App Title" }
+            { title = SimpleTitle "Your Title"
+            , style =
+                Nothing
+            }
         , sections =
             [ Section Vertical
                 []
@@ -306,9 +325,85 @@ editor model =
             (\str -> UpdateHead (\head -> { head | title = str }))
          , hr [] []
          , h2 [] [ text "Body" ]
-         , stringInput "Title"
-            model.body.header.title
-            (\str -> UpdateBodyHeader (\header -> { header | title = str }))
+         , h3 [] [ text "Header" ]
+         , dropdownInput "header-style"
+            (case model.body.header.style of
+                Nothing ->
+                    "Unstyled Header"
+
+                Just _ ->
+                    "Styled Header"
+            )
+            [ "Unstyled Header", "Styled Header" ]
+            (\str ->
+                case str of
+                    "Styled Header" ->
+                        UpdateBodyHeader
+                            (\header ->
+                                { header
+                                    | style =
+                                        Just
+                                            { font = "Avenir-Black"
+                                            , size = "20"
+                                            , background = "#27aae1"
+                                            , color = "#ffffff"
+                                            }
+                                }
+                            )
+
+                    _ ->
+                        UpdateBodyHeader
+                            (\header ->
+                                { header
+                                    | style =
+                                        Nothing
+                                }
+                            )
+            )
+         , case model.body.header.style of
+            Nothing ->
+                text ""
+
+            Just style ->
+                styleEditor style
+         , dropdownInput "title-type"
+            (case model.body.header.title of
+                SimpleTitle _ ->
+                    "Simple Title"
+
+                LabelTitle _ ->
+                    "Label Title"
+
+                ImageTitle _ ->
+                    "Image Title"
+            )
+            [ "Simple Title", "Label Title", "Image Title" ]
+            (\str ->
+                case str of
+                    "Image Title" ->
+                        UpdateBodyHeader (\header -> { header | title = ImageTitle { url = "http://via.placeholder.com/350x150" } })
+
+                    "Label Title" ->
+                        UpdateBodyHeader (\header -> { header | title = LabelTitle { text = "" } })
+
+                    _ ->
+                        UpdateBodyHeader (\header -> { header | title = SimpleTitle "" })
+            )
+         , case model.body.header.title of
+            SimpleTitle str ->
+                stringInput "Simple Title"
+                    str
+                    (\str -> UpdateBodyHeader (\header -> { header | title = SimpleTitle str }))
+
+            LabelTitle t ->
+                stringInput "Label Title"
+                    t.text
+                    (\str -> UpdateBodyHeader (\header -> { header | title = LabelTitle { text = str } }))
+
+            ImageTitle t ->
+                stringInput "Image Title"
+                    t.url
+                    (\str -> UpdateBodyHeader (\header -> { header | title = ImageTitle { url = str } }))
          , hr [] []
          , h3 [] [ text "Sections" ]
          ]
@@ -354,6 +449,47 @@ btn str msg =
         [ text str ]
 
 
+styleEditor : Style -> Html Msg
+styleEditor style =
+    span []
+        [ colorInput "Background"
+            style.background
+            (\str ->
+                UpdateBodyHeader
+                    (\header ->
+                        { header
+                            | style =
+                                Maybe.map (\headerStyle -> { headerStyle | background = str }) header.style
+                        }
+                    )
+            )
+        , colorInput "Foreground"
+            style.color
+            (\str ->
+                UpdateBodyHeader
+                    (\header ->
+                        { header
+                            | style =
+                                Maybe.map (\headerStyle -> { headerStyle | color = str }) header.style
+                        }
+                    )
+            )
+        ]
+
+
+colorInput : String -> String -> (String -> Msg) -> Html Msg
+colorInput name selectedColor colorMsg =
+    span []
+        [ label [] [ text name ]
+        , input
+            [ type_ "color"
+            , value selectedColor
+            , onInput colorMsg
+            ]
+            []
+        ]
+
+
 dropdownInput : String -> a -> List a -> (a -> Msg) -> Html Msg
 dropdownInput inputName selectedValue options optionFn =
     fieldset []
@@ -364,6 +500,7 @@ dropdownInput inputName selectedValue options optionFn =
                         [ type_ "radio"
                         , name inputName
                         , onClick (optionFn x)
+                        , checked (selectedValue == x)
                         ]
                         []
                     , text (toString x)
@@ -394,6 +531,35 @@ stringInput inputName str updateFn =
         ]
 
 
+encodeStyle : Style -> Json.Encode.Value
+encodeStyle style =
+    Json.Encode.object
+        [ ( "font", Json.Encode.string style.font )
+        , ( "size", Json.Encode.string style.size )
+        , ( "background", Json.Encode.string style.background )
+        , ( "color", Json.Encode.string style.color )
+        ]
+
+
+encodeTitle : Title -> Json.Encode.Value
+encodeTitle title =
+    case title of
+        SimpleTitle str ->
+            Json.Encode.string str
+
+        LabelTitle t ->
+            Json.Encode.object
+                [ ( "type", Json.Encode.string "label" )
+                , ( "text", Json.Encode.string t.text )
+                ]
+
+        ImageTitle t ->
+            Json.Encode.object
+                [ ( "type", Json.Encode.string "image" )
+                , ( "url", Json.Encode.string t.url )
+                ]
+
+
 encodeJson : Model -> Json.Encode.Value
 encodeJson model =
     Json.Encode.object
@@ -410,10 +576,15 @@ encodeJson model =
                   , Json.Encode.object
                         [ ( "header"
                           , Json.Encode.object
-                                [ ( "title"
-                                  , Json.Encode.string model.body.header.title
-                                  )
-                                ]
+                                ([ ( "title", encodeTitle model.body.header.title ) ]
+                                    ++ (case model.body.header.style of
+                                            Nothing ->
+                                                []
+
+                                            Just style ->
+                                                [ ( "style", encodeStyle style ) ]
+                                       )
+                                )
                           )
                         , ( "sections"
                           , Json.Encode.list <|
